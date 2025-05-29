@@ -1,0 +1,3 @@
+{'Method': 'CUDA Naive', 'Matrix Size': 1024, 'Time (s)': 0.08029828071594239, 'GFLOPs': 26.743830986827586}
+{'Method': 'CUDA Tiled', 'Matrix Size': 1024, 'Time (s)': 0.011498212814331055, 'GFLOPs': 186.76673346343318}
+{'Method': 'cuBLAS (PyTorch)', 'Matrix Size': 1024, 'Time (s)': 0.006200051307678223, 'GFLOPs': 346.36546399874607}

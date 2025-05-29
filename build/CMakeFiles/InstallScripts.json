@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"E:/CS_Projects_n_Hacks/CuMatMul/build/cmake_install.cmake",
+		"E:/CS_Projects_n_Hacks/CuMatMul/build/pybind11/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
