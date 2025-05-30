@@ -1,4 +1,4 @@
-# CuMatMul 🔲❌➕🔢
+# CuMatMul - Fast Matrix Multiplication Library 🔲❌➕🔢
 CuMatMul is a high-performance matrix multiplication benchmarking suite implemented in CUDA. It includes:
 
 - Naive global memory kernel
