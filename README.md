@@ -1,4 +1,4 @@
-# CuMatMul 
+# CuMatMul 🔲❌➕🔢
 CuMatMul is a high-performance matrix multiplication benchmarking suite implemented in CUDA. It includes:
 
 - Naive global memory kernel
@@ -42,6 +42,12 @@ pip install notebook matplotlib seaborn pandas
 jupyter notebook benchmarks.ipynb
 
 > Use benchmarks.ipynb to generate bar plots from results.txt.
+
+## 📊 Results
+![Kernel Comparision](https://github.com/user-attachments/assets/081f466c-b91e-485c-be0f-544240d96196)
+
+## 🔁 Ongoing
+Warp Level Parallelism using fast register memory
 
 ## 🙌 References
 - NVIDIA CUDA Programming Guide (https://docs.nvidia.com/cuda/)
