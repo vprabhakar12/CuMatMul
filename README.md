@@ -47,7 +47,12 @@ jupyter notebook benchmarks.ipynb
 ![Kernel Comparision](https://github.com/user-attachments/assets/081f466c-b91e-485c-be0f-544240d96196)
 
 ## 🔁 Ongoing
-Warp Level Parallelism using fast register memory
+Kernel Development:
+- Warp Level Parallelism using fast register memory
+
+Hyper Parameters:
+- Tile size
+- Grid launch
 
 ## 🙌 References
 - NVIDIA CUDA Programming Guide (https://docs.nvidia.com/cuda/)
