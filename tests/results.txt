@@ -1,3 +1,4 @@
-{'Method': 'CUDA Naive', 'Matrix Size': 1024, 'Time (s)': 0.08029828071594239, 'GFLOPs': 26.743830986827586}
-{'Method': 'CUDA Tiled', 'Matrix Size': 1024, 'Time (s)': 0.011498212814331055, 'GFLOPs': 186.76673346343318}
-{'Method': 'cuBLAS (PyTorch)', 'Matrix Size': 1024, 'Time (s)': 0.006200051307678223, 'GFLOPs': 346.36546399874607}
+{'Method': 'CUDA Naive', 'Matrix Size_M': 1024, 'Matrix Size_K': 2048, 'Matrix Size_N': 1024, 'Time (s)': 0.1503955364227295, 'GFLOPs': 14.27890547206059}
+{'Method': 'CUDA GMEM COALESCED', 'Matrix Size_M': 1024, 'Matrix Size_K': 2048, 'Matrix Size_N': 1024, 'Time (s)': 0.016599869728088378, 'GFLOPs': 129.36750005732134}
+{'Method': 'CUDA Tiled', 'Matrix Size': 1024, 'Time (s)': 0.00978238582611084, 'GFLOPs': 219.52555196381678}
+{'Method': 'cuBLAS (PyTorch)', 'Matrix Size': 1024, 'Time (s)': 0.007099223136901855, 'GFLOPs': 302.49558389527886}

@@ -1,17 +1,89 @@
 #include <cuda_runtime.h>
 #include <iostream>
+// using namespace std;
 
-__global__ void matmul_naive(const float* A, const float* B, float* C, int N) {
-    int row = blockIdx.y * blockDim.y + threadIdx.y;
-    int col = blockIdx.x * blockDim.x + threadIdx.x;
+#define BLOCK_SIZE 32
 
-    float sum = 0.0f;
-    if (row < N && col < N) {
-        for (int i = 0; i < N; ++i) {
-            sum += A[row * N + i] * B[i * N + col];
+__global__ void matmul_naive(const float* A, const float* B, float* C,
+                             int M, int K, int N) {
+    const int x = blockIdx.x * blockDim.x + threadIdx.x;  // x = row index (first dimension of output C)
+    const int y = blockIdx.y * blockDim.y + threadIdx.y;  // y = col index (second dimension of output C)
+
+    if (x < M && y < N) {
+        float sum = 0.0f;
+        for (int i = 0; i < K; ++i) {
+            sum += A[x * K + i] * B[i * N + y];
         }
-        C[row * N + col] = sum;
+        C[x * N + y] = sum;
     }
+    // C[0] = 5;
+}
+
+extern "C" void launch_naive(float* A, float* B, float* C, int M, int K, int N) {
+    float *d_A, *d_B, *d_C;
+    size_t size_A = M * K * sizeof(float);
+    size_t size_B = K * N * sizeof(float);
+    size_t size_C = M * N * sizeof(float);
+
+    cudaMalloc(&d_A, size_A);
+    cudaMalloc(&d_B, size_B);
+    cudaMalloc(&d_C, size_C);
+
+    cudaMemcpy(d_A, A, size_A, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_B, B, size_B, cudaMemcpyHostToDevice);
+
+    dim3 blockSize(BLOCK_SIZE, BLOCK_SIZE);
+    dim3 gridSize((M + BLOCK_SIZE-1) / BLOCK_SIZE, (N + BLOCK_SIZE-1) / BLOCK_SIZE);
+
+    matmul_naive<<<gridSize, blockSize>>>(d_A, d_B, d_C, M, K, N);
+
+    cudaMemcpy(C, d_C, size_C, cudaMemcpyDeviceToHost);
+
+    // std::cerr <<" value " << *C << std::endl;
+
+    cudaFree(d_A);
+    cudaFree(d_B);
+    cudaFree(d_C);
+}
+
+__global__ void matmul_gmemcoal(const float* A, const float* B, float* C,
+                             int M, int K, int N) {
+    const int x = blockIdx.x * BLOCK_SIZE + threadIdx.x/BLOCK_SIZE;  // x = col index (2nd dimension of output C)
+    const int y = blockIdx.y * BLOCK_SIZE + threadIdx.x%BLOCK_SIZE;  // y = row index (1st dimension of output C)
+
+    if (x < M && y < N) {
+        float sum = 0.0f;
+        for (int i = 0; i < K; ++i) {
+            sum += A[x * K + i] * B[i * N + y];
+        }
+        C[x * N + y] = sum;
+    }
+    // C[0] = 5;
+}
+
+extern "C" void launch_gmemcoal(float* A, float* B, float* C, int M, int K, int N) {
+    float *d_A, *d_B, *d_C;
+    size_t size_A = M * K * sizeof(float);
+    size_t size_B = K * N * sizeof(float);
+    size_t size_C = M * N * sizeof(float);
+
+    cudaMalloc(&d_A, size_A);
+    cudaMalloc(&d_B, size_B);
+    cudaMalloc(&d_C, size_C);
+
+    cudaMemcpy(d_A, A, size_A, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_B, B, size_B, cudaMemcpyHostToDevice);
+
+    dim3 blockSize(BLOCK_SIZE * BLOCK_SIZE);
+    dim3 gridSize((M + BLOCK_SIZE-1) / BLOCK_SIZE, (N + BLOCK_SIZE-1) / BLOCK_SIZE);
+
+    matmul_gmemcoal<<<gridSize, blockSize>>>(d_A, d_B, d_C, M, K, N);
+
+    cudaMemcpy(C, d_C, size_C, cudaMemcpyDeviceToHost);
+
+    cudaFree(d_A);
+    cudaFree(d_B);
+    cudaFree(d_C);
 }
 
 #define TILE_SIZE 16
@@ -48,29 +120,6 @@ __global__ void matmul_tiled(const float* A, const float* B, float* C, int N) {
     if (row < N && col < N) {
         C[row * N + col] = sum;
     }
-}
-
-extern "C" void launch_naive(float* A, float* B, float* C, int N) {
-    float *d_A, *d_B, *d_C;
-    size_t size = N * N * sizeof(float);
-
-    cudaMalloc(&d_A, size);
-    cudaMalloc(&d_B, size);
-    cudaMalloc(&d_C, size);
-
-    cudaMemcpy(d_A, A, size, cudaMemcpyHostToDevice);
-    cudaMemcpy(d_B, B, size, cudaMemcpyHostToDevice);
-
-    dim3 blockSize(16, 16);
-    dim3 gridSize((N + 15) / 16, (N + 15) / 16);
-
-    matmul_naive<<<gridSize, blockSize>>>(d_A, d_B, d_C, N);
-
-    cudaMemcpy(C, d_C, size, cudaMemcpyDeviceToHost);
-
-    cudaFree(d_A);
-    cudaFree(d_B);
-    cudaFree(d_C);
 }
 
 extern "C" void launch_tiled(float* A, float* B, float* C, int N) {
