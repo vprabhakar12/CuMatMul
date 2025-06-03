@@ -2,6 +2,7 @@
 CuMatMul is a high-performance matrix multiplication benchmarking suite implemented in CUDA. It includes:
 
 - Naive global memory kernel
+- GMEM Coalesced kernel
 - Tiled shared memory kernel
 - cuBLAS GPU baseline (via PyTorch)
 
@@ -28,8 +29,9 @@ This builds a Python-accessible module: cumatmul.pyd
 In the test directory
 ```python test.py```
 
-This runs matrix multiplication (default size: 1024×1024) using:
+This runs matrix multiplication (A: 1024×2048, B: 2048x1024, C= A x B) using:
 - Naive CUDA kernel
+- GMEM Coalesced kernel
 - Tiled shared memory CUDA kernel
 - cuBLAS (via PyTorch)
 
@@ -44,7 +46,8 @@ jupyter notebook benchmarks.ipynb
 > Use benchmarks.ipynb to generate bar plots from results.txt.
 
 ## 📊 Results
-![Kernel Comparision](https://github.com/user-attachments/assets/081f466c-b91e-485c-be0f-544240d96196)
+![Kernel Comparision_2](https://github.com/user-attachments/assets/787a8b40-eb67-4bfd-84cd-7a0ef217652e)
+
 
 ## 🔁 Ongoing
 Kernel Development:
